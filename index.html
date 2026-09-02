@@ -136,7 +136,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#7b4dbb}
 </div>
 
 <script>
-var SCRIPT_URL = "PENDING_APPS_SCRIPT_URL";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjVnc25f0AEMBiHN7GIvFNbY57xq7-iKyMjPcLj4QL8mADRGuGr584qV3dBAlMq9uifw/exec";
 
 function opts(el, name, list, type){
   var box = document.getElementById(el);
@@ -208,20 +208,13 @@ form.addEventListener("submit", function(ev){
 
   function finish(){ document.getElementById("form-wrap").style.display="none"; document.getElementById("thanks").style.display="block"; }
 
-  if(SCRIPT_URL && SCRIPT_URL.indexOf("PENDING") === -1){
-    try {
-      var controller = new AbortController();
-      var timer = setTimeout(function(){ controller.abort(); finish(); }, 6000);
-      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(data), signal: controller.signal })
-        .then(function(){ clearTimeout(timer); finish(); })
-        .catch(function(){ clearTimeout(timer); finish(); });
-    } catch(e){ finish(); }
-  } else {
-    // Fallback: откроется почтовый клиент (пока Apps Script не подключён)
-    var body = Object.keys(data).map(function(k){ return k + ": " + data[k]; }).join("\n");
-    window.location.href = "mailto:vladimir.volkomorov@gmail.com?subject=" + encodeURIComponent("Входная анкета — " + data.fio) + "&body=" + encodeURIComponent(body);
-    finish();
-  }
+  try {
+    var controller = new AbortController();
+    var timer = setTimeout(function(){ controller.abort(); finish(); }, 6000);
+    fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(data), signal: controller.signal })
+      .then(function(){ clearTimeout(timer); finish(); })
+      .catch(function(){ clearTimeout(timer); finish(); });
+  } catch(e){ finish(); }
 });
 </script>
 </body>
