@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Входная анкета — Ваш уровень владения ИИ-инструментами</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#5b2c8a 0%,#7b4dbb 50%,#9b6fd9 100%);min-height:100vh;padding:24px 12px;color:#2d2d3a}
+.container{max-width:760px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.header{background:linear-gradient(135deg,#5b2c8a,#7b4dbb);color:#fff;padding:32px 28px}
+.header h1{font-size:24px;margin-bottom:10px}
+.header p{font-size:14px;opacity:.92;line-height:1.5}
+.progress-wrap{height:6px;background:#e8e0f2}
+.progress-bar{height:6px;background:linear-gradient(90deg,#5b2c8a,#9b6fd9);width:0%;transition:width .3s}
+.content{padding:28px}
+.block{margin-bottom:34px}
+.block-title{font-size:17px;font-weight:bold;color:#5b2c8a;border-left:4px solid #9b6fd9;padding-left:12px;margin-bottom:16px}
+.q{margin-bottom:20px}
+.q-label{font-size:14.5px;font-weight:bold;margin-bottom:8px;display:block}
+.q-label .req{color:#c0392b}
+.hint{font-size:12.5px;color:#777;margin-bottom:8px}
+input[type=text],input[type=email],select,textarea{width:100%;padding:11px 12px;border:1.5px solid #d5cbe6;border-radius:8px;font-size:14px;font-family:inherit;background:#faf8fd}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#7b4dbb}
+.opt{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border:1px solid #eee;border-radius:7px;margin-bottom:5px;font-size:13.5px;cursor:pointer}
+.opt:hover{background:#f5f0fb}
+.opt input{margin-top:3px;accent-color:#5b2c8a}
+.terms{width:100%;border-collapse:collapse;font-size:13px}
+.terms th{background:#f3edfa;padding:8px 6px;font-size:12px;text-align:center;border:1px solid #e4dbf2}
+.terms td{border:1px solid #e4dbf2;padding:8px 6px;vertical-align:middle}
+.terms td.tname{font-weight:bold;font-size:13px;width:32%}
+.terms td.tname small{display:block;font-weight:normal;color:#888;font-size:11px}
+.terms label{display:block;text-align:center;padding:4px 2px;cursor:pointer;border-radius:5px;font-size:11.5px}
+.terms label:hover{background:#f5f0fb}
+.terms input{accent-color:#5b2c8a;display:block;margin:0 auto 3px}
+.btn{display:block;width:100%;padding:15px;background:linear-gradient(135deg,#5b2c8a,#7b4dbb);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:10px}
+.btn:hover{opacity:.92}
+.btn:disabled{opacity:.5;cursor:wait}
+.err{color:#c0392b;font-size:13px;margin-top:8px;display:none}
+#thanks{display:none;text-align:center;padding:50px 24px}
+#thanks h2{color:#5b2c8a;margin-bottom:12px}
+#thanks p{color:#555;line-height:1.6}
+@media(max-width:640px){.terms{font-size:11px}.terms td.tname small{display:none}.terms th{font-size:10px;padding:6px 2px}.terms label{font-size:9.5px;padding:3px 1px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Входная анкета: ваш уровень владения ИИ-инструментами</h1>
+    <p>Анкета для курса «ИИ-инструменты для региональной редакции». Заполнение — 7–10 минут. Правильных ответов нет: нам важно понять реальный уровень группы, чтобы занятие прошло с максимальной пользой.</p>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="content" id="form-wrap">
+  <form id="survey">
+
+  <div class="block">
+    <div class="block-title">Блок 1. О вас</div>
+    <div class="q"><label class="q-label">1.1 ФИО <span class="req">*</span></label><input type="text" name="fio" required placeholder="Иванова Анна"></div>
+    <div class="q"><label class="q-label">1.2 Роль в редакции <span class="req">*</span></label>
+      <select name="role" required><option value="">— выберите —</option><option>Журналист</option><option>SMM / соцсети</option><option>Контент-маркетолог</option><option>Выпускающий редактор</option><option>Фотограф / видео</option><option>Другое (укажу в комментарии)</option></select></div>
+    <div class="q"><label class="q-label">1.3 Email <span class="req">*</span></label><input type="email" name="email" required placeholder="you@example.ru"></div>
+    <div class="q"><label class="q-label">1.4 Telegram</label><input type="text" name="tg" placeholder="@username"></div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Блок 2. Ежедневная работа с нейросетями</div>
+    <div class="q"><label class="q-label">2.1 Какими ИИ-ассистентами пользуетесь? <span class="req">*</span> <span style="font-weight:normal;font-size:12px;color:#888">(отметьте все подходящие)</span></label>
+      <div id="assistants"></div></div>
+    <div class="q"><label class="q-label">2.2 Платные подписки</label>
+      <select name="paid"><option value="">— выберите —</option><option>Нет, пользуюсь бесплатными версиями</option><option>ChatGPT Plus</option><option>Claude Pro</option><option>Gemini Advanced</option><option>Российский сервис (GigaChat, Алиса Про и т.п.)</option><option>Другая подписка</option></select></div>
+    <div class="q"><label class="q-label">2.3 Как часто обращаетесь к нейросети в рабочее время? <span class="req">*</span></label>
+      <div id="freq"></div></div>
+    <div class="q"><label class="q-label">2.4 Для каких задач уже используете ИИ? <span style="font-weight:normal;font-size:12px;color:#888">(отметьте все подходящие)</span></label>
+      <div id="tasks"></div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Блок 3. Технический словарь и инфраструктура</div>
+    <div class="q"><span class="q-label">3.1 Насколько вам знакомы эти термины? <span class="req">*</span></span>
+      <p class="hint">Для каждого термина выберите один вариант. Это не экзамен — честные ответы помогут нам построить занятие.</p>
+      <div style="overflow-x:auto"><table class="terms">
+        <tr><th style="text-align:left">Термин</th><th>Понимаю и работал(а)</th><th>Примерно понимаю, но не работал(а)</th><th>Слышал(а), но не объясню</th><th>Впервые вижу</th></tr>
+        <tr><td class="tname">Deploy / деплой<small>развёртывание сервиса на сервере</small></td><td><label><input type="radio" name="term_deploy" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_deploy" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_deploy" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_deploy" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">GitHub<small>репозиторий кода</small></td><td><label><input type="radio" name="term_github" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_github" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_github" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_github" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">Hugging Face<small>каталог открытых ИИ-моделей</small></td><td><label><input type="radio" name="term_hf" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_hf" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_hf" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_hf" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">Open-source<small>открытый исходный код</small></td><td><label><input type="radio" name="term_opensource" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_opensource" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_opensource" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_opensource" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">API и API-ключ<small>способ подключения сервисов друг к другу</small></td><td><label><input type="radio" name="term_api" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_api" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_api" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_api" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">MCP<small>Model Context Protocol — подключение сервисов к ИИ</small></td><td><label><input type="radio" name="term_mcp" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_mcp" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_mcp" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_mcp" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">Workflow / автоматизация<small>n8n, Zapier, Make</small></td><td><label><input type="radio" name="term_workflow" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_workflow" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_workflow" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_workflow" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">JSON<small>формат обмена данными</small></td><td><label><input type="radio" name="term_json" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_json" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_json" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_json" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">Webhook<small>сервис «сам сообщает» о событии</small></td><td><label><input type="radio" name="term_webhook" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_webhook" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_webhook" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_webhook" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">Credentials / токен доступа<small>данные для входа в API</small></td><td><label><input type="radio" name="term_credentials" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_credentials" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_credentials" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_credentials" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">Транскрибация и diarization<small>расшифровка аудио с разделением спикеров</small></td><td><label><input type="radio" name="term_transcribe" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_transcribe" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_transcribe" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_transcribe" value="Впервые вижу">ок</label></td></tr>
+        <tr><td class="tname">Prompt injection<small>внедрение вредоносной инструкции в текст для ИИ</small></td><td><label><input type="radio" name="term_injection" value="Понимаю и работал(а) с этим">ок</label></td><td><label><input type="radio" name="term_injection" value="Примерно понимаю, но не работал(а)">ок</label></td><td><label><input type="radio" name="term_injection" value="Слышал(а), но не объясню">ок</label></td><td><label><input type="radio" name="term_injection" value="Впервые вижу">ок</label></td></tr>
+      </table></div>
+    </div>
+    <div class="q"><label class="q-label">3.2 Аккаунт на GitHub</label>
+      <div id="github_acc"></div></div>
+    <div class="q"><label class="q-label">3.3 Приходилось ли запускать чужой проект с GitHub (клонировать/скачивать и запускать на своём компьютере или сервере)?</label>
+      <div id="github_run"></div></div>
+    <div class="q"><label class="q-label">3.4 Приходилось ли пользоваться открытыми моделями (Hugging Face, Ollama, LM Studio)?</label>
+      <div id="hf_local"></div></div>
+    <div class="q"><label class="q-label">3.5 Работали ли с автоматизацией без кода (n8n, Zapier, Make, Яндекс-сценарии) или собирали Telegram-бота?</label>
+      <div id="automation"></div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Блок 4. Практика: что уже пробовали</div>
+    <div class="q"><label class="q-label">4.1 Генерировали ли изображения или видео с помощью ИИ?</label>
+      <div id="imgvideo"></div>
+      <input type="text" id="imgvideo_tools" placeholder="Если да — какие инструменты?" style="margin-top:6px"></div>
+    <div class="q"><label class="q-label">4.2 Расшифровывали ли интервью или записи через ИИ (Whisper, Deepgram, транскрибация в Telegram/МойОфис)?</label>
+      <div id="transcribe_ai"></div></div>
+    <div class="q"><label class="q-label">4.3 Загружали ли документы или таблицы в нейросеть для анализа?</label>
+      <div id="docs_ai"></div></div>
+    <div class="q"><label class="q-label">4.4 Проводите ли проверку фактов в ответах ИИ?</label>
+      <div id="factcheck"></div>
+      <input type="text" id="factcheck_how" placeholder="Если да — как именно проверяете?" style="margin-top:6px"></div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Блок 5. Безопасность</div>
+    <div class="q"><label class="q-label">5.1 Загружаете ли во внешние нейросети внутренние документы, черновики до публикации или персональные данные? <span class="req">*</span></label>
+      <div id="security"></div></div>
+  </div>
+
+  <button type="submit" class="btn" id="submitBtn">Отправить анкету</button>
+  <div class="err" id="errMsg">Пожалуйста, заполните обязательные поля: ФИО, роль, email, частоту использования, все термины в таблице 3.1 и вопрос 5.1.</div>
+  </form>
+  </div>
+
+  <div id="thanks">
+    <h2>Спасибо! Анкета отправлена ✓</h2>
+    <p>Мы обработаем ваши ответы и подготовим занятие под уровень группы.<br>Если что-то пойдёт не так — напишите куратору в Telegram.</p>
+  </div>
+</div>
+
+<script>
+var SCRIPT_URL = "PENDING_APPS_SCRIPT_URL";
+
+function opts(el, name, list, type){
+  var box = document.getElementById(el);
+  list.forEach(function(t){
+    var l = document.createElement("label"); l.className = "opt";
+    var i = document.createElement("input"); i.type = type; i.name = name; i.value = t;
+    l.appendChild(i); l.appendChild(document.createTextNode(t));
+    box.appendChild(l);
+  });
+}
+opts("assistants","assistants",["ChatGPT","Claude","Gemini","DeepSeek","Qwen","Kimi","GigaChat","YandexGPT / Алиса Про","Grok","Другое — укажу в поле ниже"],"checkbox");
+opts("freq","freq",["Несколько раз в день","Ежедневно","Пару раз в неделю","Редко","Практически никогда"],"radio");
+opts("tasks","tasks",["Тексты / рерайт","Анализ и саммари","Таблицы","Переводы","Расшифровки аудио и видео","Картинки","Видео"],"checkbox");
+opts("github_acc","github_acc",["Да, пользуюсь регулярно","Аккаунт есть, но бываю редко","Нет аккаунта","Не знаю, что такое GitHub"],"radio");
+opts("github_run","github_run",["Да, запускал(а)","Нет, но знаю, как это делается","Нет, не доводилось"],"radio");
+opts("hf_local","hf_local",["Да, пользовался(ась)","Нет, но знаю, что это","Впервые слышу"],"radio");
+opts("automation","automation",["Да, работал(а) с n8n / Zapier / Make","Да, собирал(а) Telegram-бота","Пробовал(а), но не довёл(а) до конца","Нет, не работал(а)"],"radio");
+opts("imgvideo","imgvideo",["Да, регулярно","Пробовал(а) пару раз","Нет, не приходилось"],"radio");
+opts("transcribe_ai","transcribe_ai",["Да, регулярно","Пробовал(а) пару раз","Нет, не приходилось"],"radio");
+opts("docs_ai","docs_ai",["Да, регулярно","Пробовал(а) пару раз","Нет, не приходилось"],"radio");
+opts("factcheck","factcheck",["Да, всегда сверяю с первоисточником","Иногда проверяю ключевые факты","Обычно доверяю ответу ИИ","Использую ИИ только для задач, где ошибка некритична"],"radio");
+opts("security","security",["Да, регулярно","Иногда","Стараюсь никогда","Не задумывался(ась) об этом"],"radio");
+
+var form = document.getElementById("survey");
+var total = form.querySelectorAll("input, select").length;
+form.addEventListener("change", function(){
+  var done = 0;
+  form.querySelectorAll("input[type=checkbox]:checked, input[type=radio]:checked, input[type=text]:valid, input[type=email]:valid, select:valid").forEach(function(e){done++;});
+  document.getElementById("pbar").style.width = Math.min(100, done / total * 130) + "%";
+});
+
+form.addEventListener("submit", function(ev){
+  ev.preventDefault();
+  var required = ["fio","role","email","freq","security"];
+  var terms = ["term_deploy","term_github","term_hf","term_opensource","term_api","term_mcp","term_workflow","term_json","term_webhook","term_credentials","term_transcribe","term_injection"];
+  var ok = true;
+  required.forEach(function(n){
+    var el = form.querySelector("[name="+n+"]");
+    if(!el || !el.value) ok = false;
+  });
+  terms.forEach(function(n){
+    if(!form.querySelector("[name="+n+"]:checked")) ok = false;
+  });
+  if(!ok){ document.getElementById("errMsg").style.display = "block"; return; }
+  document.getElementById("errMsg").style.display = "none";
+
+  function checked(name){ var e = form.querySelectorAll("[name="+name+"]:checked"); return Array.from(e).map(function(x){return x.value;}).join(", "); }
+  function picked(name){ var e = form.querySelector("[name="+name+"]:checked"); return e ? e.value : ""; }
+  var img = picked("imgvideo");
+  var tools = document.getElementById("imgvideo_tools").value.trim();
+  if(img && tools) img += " (инструменты: " + tools + ")";
+  var fc = picked("factcheck");
+  var fch = document.getElementById("factcheck_how").value.trim();
+  if(fc && fch) fc += " (как: " + fch + ")";
+
+  var data = {
+    fio: form.fio.value.trim(), role: form.role.value, email: form.email.value.trim(), tg: form.tg.value.trim(),
+    assistants: checked("assistants"), paid: form.paid.value, freq: picked("freq"), tasks: checked("tasks"),
+    term_deploy: picked("term_deploy"), term_github: picked("term_github"), term_hf: picked("term_hf"),
+    term_opensource: picked("term_opensource"), term_api: picked("term_api"), term_mcp: picked("term_mcp"),
+    term_workflow: picked("term_workflow"), term_json: picked("term_json"), term_webhook: picked("term_webhook"),
+    term_credentials: picked("term_credentials"), term_transcribe: picked("term_transcribe"), term_injection: picked("term_injection"),
+    github_acc: picked("github_acc"), github_run: picked("github_run"), hf_local: picked("hf_local"), automation: picked("automation"),
+    imgvideo: img, transcribe_ai: picked("transcribe_ai"), docs_ai: picked("docs_ai"), factcheck: fc, security: picked("security")
+  };
+
+  var btn = document.getElementById("submitBtn");
+  btn.disabled = true; btn.textContent = "Отправляем...";
+
+  function finish(){ document.getElementById("form-wrap").style.display="none"; document.getElementById("thanks").style.display="block"; }
+
+  if(SCRIPT_URL && SCRIPT_URL.indexOf("PENDING") === -1){
+    try {
+      var controller = new AbortController();
+      var timer = setTimeout(function(){ controller.abort(); finish(); }, 6000);
+      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(data), signal: controller.signal })
+        .then(function(){ clearTimeout(timer); finish(); })
+        .catch(function(){ clearTimeout(timer); finish(); });
+    } catch(e){ finish(); }
+  } else {
+    // Fallback: откроется почтовый клиент (пока Apps Script не подключён)
+    var body = Object.keys(data).map(function(k){ return k + ": " + data[k]; }).join("\n");
+    window.location.href = "mailto:vladimir.volkomorov@gmail.com?subject=" + encodeURIComponent("Входная анкета — " + data.fio) + "&body=" + encodeURIComponent(body);
+    finish();
+  }
+});
+</script>
+</body>
+</html>
